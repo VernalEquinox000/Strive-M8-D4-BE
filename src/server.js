@@ -7,7 +7,8 @@ const passport = require("passport")
 
 const articlesRouter = require("./services/articles")
 const authorsRouter = require("./services/authors")
-
+//import oauth as trick
+const oauth = require("./services/auth/oauth")
 
 const {
   notFoundHandler,
