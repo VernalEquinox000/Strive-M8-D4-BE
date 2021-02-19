@@ -12,7 +12,7 @@ const authenticate = async author => {
         //after definition 
         const newRefreshToken = await generateRefreshJWT({ _id: author._id })
         console.log(newRefreshToken)
-        console.log(author.refreshTokens)
+        //console.log(author.refreshTokens)
         author.refreshTokens = author.refreshTokens.concat({ token: newRefreshToken })
         await author.save()
         
@@ -28,7 +28,7 @@ const authenticate = async author => {
 const generateJWT = payload =>
     new Promise((res, rej) => 
         jwt.sign(payload, process.env.JWT_SECRET,
-        { expiresIn: "15 minutes" }, (error, token) => {
+        { expiresIn: "15m" }, (error, token) => {
             if (error) rej(error)
             res(token)
     }))

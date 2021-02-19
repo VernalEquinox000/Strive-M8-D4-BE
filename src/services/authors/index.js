@@ -53,7 +53,7 @@ authorsRouter.get("/", authorize, async (req, res, next) => {
 
 authorsRouter.get("/me", authorize, async (req, res, next) => {
     try {
-        res.send(req.user)
+        res.send(req.author)
         
     } catch (error) {
         console.log(error)
@@ -66,8 +66,8 @@ authorsRouter.get("/me", authorize, async (req, res, next) => {
 authorsRouter.put("/me", authorize, async (req, res, next) => {
     try {
         const udpates = Object.keys(req.body)
-        udpates.forEach(update => (req.user[update] = req.body[update]))
-        await req.user.save()
+        udpates.forEach(update => (req.author[update] = req.body[update]))
+        await req.author.save()
 
 
 
@@ -84,7 +84,7 @@ authorsRouter.put("/me", authorize, async (req, res, next) => {
 authorsRouter.delete("/me", authorize, async (req, res, next) => {
     try {
         
-        await req.user.deleteOne(res.send("deleted"))
+        await req.author.deleteOne(res.send("deleted"))
         
     } catch (error) {
         console.log(error)
@@ -96,7 +96,7 @@ authorsRouter.delete("/me", authorize, async (req, res, next) => {
 ///LOGOUT
 authorsRouter.post("/logout", async (req, res, next) => {
     try {
-        req.user.refreshTokens = req.user.refreshTokens.filter(t => t.token !== req.body.refreshToken)
+        req.author.refreshTokens = req.author.refreshTokens.filter(t => t.token !== req.body.refreshToken)
         res.send()
         
     } catch (error) {
@@ -158,6 +158,14 @@ authorsRouter.get('/googleLogin',
 
 authorsRouter.get('/googleRedirect', passport.authenticate('google'), async (req, res, next) => {
     res.send("YEEEEEEAHHHHH")
+    //console.log(req.author)
+    //res.redirect(process.env.FE_URL)//+ "?accessToken=" + req.author.accessToken)
+
+    try {
+        
+    } catch (error) {
+        
+    }
 } )
 
 module.exports= authorsRouter
