@@ -1,8 +1,8 @@
 const express = require("express")
-const { authenticate } = require("../auth/tools")
 const passport = require("passport")
 
-const { authorize , refreshToken } = require("../auth/middleware")
+const { authorize } = require("../auth/middleware")
+const {authenticate,refreshToken} = require("../auth/tools")
 
 const AuthorsModel = require("./schema")
 
@@ -25,8 +25,8 @@ authorsRouter.post("/login", async (req, res, next) => {
     try {
         const {name, password} = req.body
         const author = await AuthorsModel.findByCredentials(name, password)
-/*         const token = await authenticate(author)
-        res.send(token) */
+        const token = await authenticate(author)
+        res.send(token)
                 const tokens = await authenticate(author)
         res.send(tokens)
         
@@ -94,7 +94,7 @@ authorsRouter.delete("/me", authorize, async (req, res, next) => {
 })
 
 ///LOGOUT
-authorsRouter.post("/logout", async (req, res, next) => {
+authorsRouter.post("/logout", authorize, async (req, res, next) => {
     try {
         req.author.refreshTokens = req.author.refreshTokens.filter(t => t.token !== req.body.refreshToken)
         res.send()
@@ -107,7 +107,7 @@ authorsRouter.post("/logout", async (req, res, next) => {
 
 
 ///LOGOUTALL
-authorsRouter.post("/logoutAll", async (req, res, next) => {
+authorsRouter.post("/logoutAll", authorize, async (req, res, next) => {
     try {
         req.author.refreshToken =[]
         await req.author.save()
@@ -123,7 +123,6 @@ authorsRouter.post("/logoutAll", async (req, res, next) => {
 
 ////////refreshtoken
 authorsRouter.post("/refreshToken", async (req, res, next) => {
-    try {
         const oldRefreshToken = req.body.refreshToken
         if (!oldRefreshToken) { 
             const err= new Error("Missing token refresho")
@@ -143,11 +142,6 @@ authorsRouter.post("/refreshToken", async (req, res, next) => {
                 
             }
         }
-         
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
 })
 
 ////////NEW CODE BELOW
