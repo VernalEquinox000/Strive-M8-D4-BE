@@ -4,6 +4,7 @@ const cors = require("cors")
 const listEndPoints = require("express-list-endpoints")
 const mongoose = require("mongoose")
 const passport = require("passport")
+const cookieParser = require("cookie-parser")
 
 const articlesRouter = require("./services/articles")
 const authorsRouter = require("./services/authors")
@@ -18,7 +19,23 @@ const {
 
 const server = express()
 
-server.use(cors())
+//adding cors options: 
+const whitelist = ["http://localhost:3000"]
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) === -1 || !origin) {
+      callback(null,true)
+    } else {
+      callback(new Error("not allowed from CORS"))
+
+    }
+  },
+  credentials: true
+}
+
+
+
+server.use(cors(corsOptions))
 const port = process.env.PORT || 5000
 
 
@@ -26,6 +43,8 @@ const port = process.env.PORT || 5000
 //const staticFolderPath = join(__dirname, "../public")
 //server.use(express.static(staticFolderPath))
 server.use(express.json())
+//new for cookies
+server.use(cookieParser())
 //initialize passport: 
 server.use(passport.initialize())
 

@@ -5,8 +5,10 @@ const { verifyJWT } = require("./tools")
 const authorize = async (req, res, next) => {
     try {
 
-        const token = req.header("Authorization").replace("Bearer ", "")
-        
+        //const token = req.header("Authorization").replace("Bearer ", "")
+        //for cookies:
+        const token = req.cookies.accessToken
+
         const decoded = await verifyJWT(token)
 
         const author = await AuthorModel.findOne({ _id: decoded._id })

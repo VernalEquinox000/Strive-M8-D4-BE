@@ -152,8 +152,9 @@ authorsRouter.get('/googleLogin',
 authorsRouter.get('/googleRedirect', passport.authenticate('google'), async (req, res, next) => {
     //res.send("YEEEEEEAHHHHH")
     console.log(req.user.tokens)
-    res.cookie("accessToken", req.user.tokens.token)
-    res.cookie("refreshToken", req.user.tokens.refreshToken)
+    res.cookie("accessToken", req.user.tokens.token, {httpOnly: true})
+    res.cookie("refreshToken", req.user.tokens.refreshToken,
+    {httpOnly:true, path:"/authors/refreshToken",})
     res.redirect(process.env.FE_URL) //+ "?accessToken=" + req.user.tokens.accessToken)
     //attach the token to URL, this so far before cookies
 
