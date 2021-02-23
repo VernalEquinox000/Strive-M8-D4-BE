@@ -25,9 +25,8 @@ authorsRouter.post("/login", async (req, res, next) => {
     try {
         const {name, password} = req.body
         const author = await AuthorsModel.findByCredentials(name, password)
-        const token = await authenticate(author)
-        res.send(token)
-                const tokens = await authenticate(author)
+        console.log("author", author)
+        const tokens = await authenticate(author)
         res.send(tokens)
         
         //res.status(201).send(_id)
@@ -151,9 +150,10 @@ authorsRouter.get('/googleLogin',
 
 
 authorsRouter.get('/googleRedirect', passport.authenticate('google'), async (req, res, next) => {
-    res.send("YEEEEEEAHHHHH")
-    //console.log(req.author)
-    //res.redirect(process.env.FE_URL)//+ "?accessToken=" + req.author.accessToken)
+    //res.send("YEEEEEEAHHHHH")
+    console.log(req.user)
+    res.redirect(process.env.FE_URL + "?accessToken=" + req.user.tokens.accessToken)
+    //attach the token to URL, this so far before cookies
 
     try {
         
